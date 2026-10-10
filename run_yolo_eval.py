@@ -86,6 +86,8 @@ def load_trt_model(engine_path, gpu_id=0):
 def run_yolo_on_video(video_path, trt_model, batch_buf, batch_size, imsz,
                       gpu_id, conf_threshold=0.05):
     """Run batched TRT YOLO on a single video via NVDEC. Returns DataFrame."""
+    from torchvision.ops import nms as _nms
+
     device = batch_buf.device
     decoder = SimpleDecoder(str(video_path), gpu_id=gpu_id,
                             use_device_memory=True, output_color_type=OutputColorType.RGBP)
@@ -98,6 +100,12 @@ def run_yolo_on_video(video_path, trt_model, batch_buf, batch_size, imsz,
 
     decoder = SimpleDecoder(str(video_path), gpu_id=gpu_id,
                             use_device_memory=True, output_color_type=OutputColorType.RGBP)
+
+    # Detect raw vs post-NMS output format once
+    with torch.no_grad():
+        _test = trt_model(batch_buf)
+    _test_pred = _test[0] if isinstance(_test, (list, tuple)) else _test
+    raw_format = _test_pred.shape[1] < _test_pred.shape[2]  # [B, 5+nc, anchors] vs [B, max_det, 6+]
 
     lb_scale = min(imsz / orig_h, imsz / orig_w)
     lb_new_h = int(round(orig_h * lb_scale))
@@ -139,9 +147,33 @@ def run_yolo_on_video(video_path, trt_model, batch_buf, batch_size, imsz,
         for i in range(n_frames):
             frm_idx = batch_start + i
             det = pred[i]
-            scores = det[:, 4]
-            mask = scores > conf_threshold
-            v_det = det[mask] if mask.any() else det[:0]
+
+            if raw_format:
+                # Raw anchors: [5+nc, num_anchors] → transpose to [anchors, 5+nc]
+                det = det.permute(1, 0).contiguous()
+                scores = det[:, 4]
+                mask = scores > conf_threshold
+                det = det[mask] if mask.any() else det[:0]
+                if len(det) > 0:
+                    # Convert cxcywh → xyxy for NMS
+                    cx_r, cy_r, w_r, h_r = det[:, 0], det[:, 1], det[:, 2], det[:, 3]
+                    x1_r = cx_r - w_r / 2
+                    y1_r = cy_r - h_r / 2
+                    x2_r = cx_r + w_r / 2
+                    y2_r = cy_r + h_r / 2
+                    boxes = torch.stack([x1_r, y1_r, x2_r, y2_r], dim=1)
+                    keep = _nms(boxes, det[:, 4], 0.5)
+                    det = det[keep]
+                    # Rewrite det as [n, 5]: x1,y1,x2,y2,conf
+                    cx_r, cy_r, w_r, h_r = det[:, 0], det[:, 1], det[:, 2], det[:, 3]
+                    det = torch.stack([cx_r - w_r/2, cy_r - h_r/2,
+                                       cx_r + w_r/2, cy_r + h_r/2, det[:, 4]], dim=1)
+                v_det = det
+            else:
+                # Post-NMS: [max_det, 6+], already deduplicated
+                scores = det[:, 4]
+                mask = scores > conf_threshold
+                v_det = det[mask] if mask.any() else det[:0]
 
             n_detections = len(v_det)
             if n_detections > 0:

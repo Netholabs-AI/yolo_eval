@@ -1,0 +1,47 @@
+WARNING ⚠️ TensorRT requires GPU export, automatically assigning device=0
+Ultralytics 8.4.9 🚀 Python-3.12.3 torch-2.9.1+cu128 CUDA:0 (NVIDIA RTX PRO 6000 Blackwell Workstation Edition, 97248MiB)
+YOLO26s summary (fused): 146 layers, 9,929,646 parameters, 0 gradients, 20.5 GFLOPs
+
+[34m[1mPyTorch:[0m starting from '/home/cat/simon/mdls/yolo/yolo_1001/weights/best.pt' with input shape (192, 3, 256, 256) BCHW and output shape(s) (192, 300, 6) (19.8 MB)
+
+[34m[1mONNX:[0m starting export with onnx 1.21.0 opset 20...
+[34m[1mONNX:[0m slimming with onnxslim 0.1.91...
+[34m[1mONNX:[0m export success ✅ 50.7s, saved as '/home/cat/simon/mdls/yolo/yolo_1001/weights/best.onnx' (39.6 MB)
+
+[34m[1mTensorRT:[0m starting export with TensorRT 10.16.0.72...
+[10/04/2026-18:06:09] [TRT] [I] [MemUsageChange] Init CUDA: CPU +0, GPU +0, now: CPU 1451, GPU 3366 (MiB)
+[10/04/2026-18:06:09] [TRT] [I] ----------------------------------------------------------------
+[10/04/2026-18:06:09] [TRT] [I] Input filename:   /home/cat/simon/mdls/yolo/yolo_1001/weights/best.onnx
+[10/04/2026-18:06:09] [TRT] [I] ONNX IR version:  0.0.9
+[10/04/2026-18:06:09] [TRT] [I] Opset version:    20
+[10/04/2026-18:06:09] [TRT] [I] Producer name:    pytorch
+[10/04/2026-18:06:09] [TRT] [I] Producer version: 2.9.1
+[10/04/2026-18:06:09] [TRT] [I] Domain:           
+[10/04/2026-18:06:09] [TRT] [I] Model version:    0
+[10/04/2026-18:06:09] [TRT] [I] Doc string:       
+[10/04/2026-18:06:09] [TRT] [I] ----------------------------------------------------------------
+[34m[1mTensorRT:[0m input "images" with shape(192, 3, 256, 256) DataType.FLOAT
+[34m[1mTensorRT:[0m output "output0" with shape(192, 300, 6) DataType.FLOAT
+[34m[1mTensorRT:[0m building FP16 engine as /home/cat/simon/mdls/yolo/yolo_1001/weights/best.engine
+[10/04/2026-18:06:10] [TRT] [I] [MemUsageChange] Init builder kernel library: CPU +284, GPU +2, now: CPU 1684, GPU 3370 (MiB)
+[10/04/2026-18:06:11] [TRT] [I] Local timing cache in use. Profiling results in this builder pass will not be stored.
+[10/04/2026-18:06:11] [TRT] [I] Compiler backend is used during engine build.
+[10/04/2026-18:08:01] [TRT] [I] Detected 1 inputs and 1 output network tensors.
+[10/04/2026-18:08:05] [TRT] [I] Total Host Persistent Memory: 240 bytes
+[10/04/2026-18:08:05] [TRT] [I] Total Device Persistent Memory: 0 bytes
+[10/04/2026-18:08:05] [TRT] [I] Max Scratch Memory: 912263168 bytes
+[10/04/2026-18:08:05] [TRT] [I] [BlockAssignment] Started assigning block shifts. This will take 1157 steps to complete.
+[10/04/2026-18:08:06] [TRT] [I] [BlockAssignment] Algorithm ShiftNTopDown took 1433.47ms to assign 388 blocks to 1157 nodes requiring 916244992 bytes.
+[10/04/2026-18:08:06] [TRT] [I] Total Activation Memory: 916244992 bytes
+[10/04/2026-18:08:06] [TRT] [I] Total Weights Memory: 19635460 bytes
+[10/04/2026-18:08:06] [TRT] [I] Compiler backend is used during engine execution.
+[10/04/2026-18:08:06] [TRT] [I] Engine generation completed in 115.21 seconds.
+[10/04/2026-18:08:06] [TRT] [I] [MemUsageStats] Peak memory usage of TRT CPU/GPU memory allocators: CPU 0 MiB, GPU 384 MiB
+[34m[1mTensorRT:[0m export success ✅ 168.6s, saved as '/home/cat/simon/mdls/yolo/yolo_1001/weights/best.engine' (42.5 MB)
+
+Export complete (169.7s)
+Results saved to [1m/home/cat/simon/mdls/yolo/yolo_1001/weights[0m
+Predict:         yolo predict task=detect model=/home/cat/simon/mdls/yolo/yolo_1001/weights/best.engine imgsz=256 half
+Validate:        yolo val task=detect model=/home/cat/simon/mdls/yolo/yolo_1001/weights/best.engine imgsz=256 data=/home/ubuntu/simon/yolo_1001/map.yaml half 
+Visualize:       https://netron.app
+EXPORT DONE

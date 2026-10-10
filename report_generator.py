@@ -269,16 +269,28 @@ def make_cross_model_charts(cross_model, model_names):
             z=agree_matrix, x=model_names, y=model_names,
             colorscale="Greens", zmin=0.5, zmax=1,
             text=np.vectorize(lambda v: f"{v:.1%}")(agree_matrix),
-            texttemplate="%{text}", textfont=dict(size=12),
+            hovertemplate="%{y} vs %{x}: %{text}<extra></extra>",
         ), row=1, col=1)
         fig_heat.add_trace(go.Heatmap(
             z=iou_matrix, x=model_names, y=model_names,
             colorscale="Blues", zmin=0.5, zmax=1,
             text=np.vectorize(lambda v: f"{v:.3f}")(iou_matrix),
-            texttemplate="%{text}", textfont=dict(size=12),
+            hovertemplate="%{y} vs %{x}: %{text}<extra></extra>",
         ), row=1, col=2)
+        # Render cell values as annotations (texttemplate/textfont on Heatmap
+        # isn't supported on all plotly versions, so annotate explicitly).
+        heat_annos = []
+        for ai, ay in enumerate(model_names):
+            for bi, bx in enumerate(model_names):
+                heat_annos.append(dict(x=bx, y=ay, xref="x1", yref="y1",
+                                       text=f"{agree_matrix[ai, bi]:.1%}",
+                                       showarrow=False, font=dict(size=12)))
+                heat_annos.append(dict(x=bx, y=ay, xref="x2", yref="y2",
+                                       text=f"{iou_matrix[ai, bi]:.3f}",
+                                       showarrow=False, font=dict(size=12)))
         fig_heat.update_layout(template="plotly_white", height=400,
-                               title="Cross-Model Agreement Summary")
+                               title="Cross-Model Agreement Summary",
+                               annotations=list(fig_heat.layout.annotations) + heat_annos)
         sections.append(_fig_html(fig_heat))
     for key, cm in cross_model.items():
         a, b = key.split("_vs_")

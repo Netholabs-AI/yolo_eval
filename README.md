@@ -4,6 +4,12 @@ Compare YOLO detection models on out-of-sample test videos without ground truth.
 Measures detection consistency, temporal stability, cross-camera agreement, and
 downstream impact on LP pose estimation.
 
+> ⚠️ **Read [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) before trusting a report for a model
+> decision** — model engines can export in different output formats (raw anchors vs
+> end-to-end-NMS), inference is cached (clear it after code changes), and the suite is
+> reference-free. Used to validate the yolo_1001 fleet deployment — see
+> `pose_pipeline/fleet/YOLO_1001_DEPLOYMENT_NOTES.md`.
+
 ## Usage
 
 ### 1. Prepare test videos

@@ -1,0 +1,51 @@
+Found 27 test sessions
+
+=== yolo_0519 ===
+  All 27 sessions cached, loading...
+
+=== yolo_0626 ===
+  All 27 sessions cached, loading...
+
+=== yolo_1001 ===
+Loading /home/cat/simon/mdls/yolo/yolo_1001/weights/best.engine for TensorRT inference...
+[10/04/2026-18:08:43] [TRT] [I] Loaded engine size: 42 MiB
+[10/04/2026-18:08:45] [TRT] [I] [MemUsageChange] TensorRT-managed allocation in IExecutionContext creation: CPU +0, GPU +874, now: CPU 0, GPU 892 (MiB)
+  Engine: batch=192, imsz=256
+  [1/27] 6.01.001_2026_09_17_18_59_00_000_right: 10995 frames, 1406 fps
+  [2/27] 6.01.001_2026_09_17_19_59_00_000_right: 10995 frames, 1407 fps
+  [3/27] 6.01.001_2026_09_19_06_00_00_000_right: 10995 frames, 1407 fps
+  [4/27] 6.01.001_2026_09_19_19_59_00_000_left: 10995 frames, 1407 fps
+  [5/27] 6.01.002_2026_09_17_18_00_00_000_right: 11000 frames, 1407 fps
+  [6/27] 6.01.002_2026_09_17_19_59_00_000_left: 10995 frames, 1406 fps
+  [7/27] 6.01.002_2026_09_18_19_59_00_000_left: 10995 frames, 1405 fps
+  [8/27] 6.01.003_2026_09_17_06_00_00_000_left: 10995 frames, 1406 fps
+  [9/27] 6.01.003_2026_09_19_06_59_00_000_left: 10995 frames, 1406 fps
+  [10/27] 6.01.005_2026_09_20_06_59_00_000_right: 10995 frames, 1406 fps
+  [11/27] 6.01.007_2026_09_17_18_59_00_000_left: 10995 frames, 1406 fps
+  [12/27] 6.01.007_2026_09_20_18_59_00_000_left: 10995 frames, 1407 fps
+  [13/27] 6.01.008_2026_09_21_06_59_00_000_left: 10995 frames, 1408 fps
+  [14/27] 6.01.009_2026_09_17_06_59_00_000_left: 10995 frames, 1406 fps
+  [15/27] 6.01.009_2026_09_19_06_59_00_000_left: 10995 frames, 1407 fps
+  [16/27] 6.01.009_2026_09_21_06_59_00_000_left: 10995 frames, 1406 fps
+  [17/27] 6.01.010_2026_09_19_06_59_00_000_left: 10995 frames, 1407 fps
+  [18/27] 6.01.010_2026_09_21_06_59_00_000_left: 10995 frames, 1406 fps
+  [19/27] 6.01.016_2026_09_17_06_59_00_000_right: 10995 frames, 1407 fps
+  [20/27] 6.01.016_2026_09_20_06_59_00_000_right: 10995 frames, 1408 fps
+  [21/27] 6.01.017_2026_09_17_06_59_00_000_left: 10995 frames, 1407 fps
+  [22/27] 6.01.017_2026_09_18_06_55_00_000_left: 10995 frames, 1407 fps
+  [23/27] 6.01.017_2026_09_21_06_59_00_000_left: 10995 frames, 1406 fps
+  [24/27] 6.01.018_2026_09_20_18_59_00_000_right: 10995 frames, 1406 fps
+  [25/27] 6.01.019_2026_09_17_06_59_00_000_left: 10995 frames, 703 fps
+  [26/27] 6.01.019_2026_09_21_06_59_00_000_right: 10995 frames, 1406 fps
+  [27/27] 6.01.021_2026_09_17_06_59_00_000_right: 10995 frames, 1406 fps
+
+Inference done in 221s
+
+Computing metrics...
+  yolo_0519: det@0.3=86.2%, conf_med=0.745, jitter=0.7px
+  yolo_0626: det@0.3=90.2%, conf_med=0.767, jitter=0.7px
+  yolo_1001: det@0.3=85.4%, conf_med=0.861, jitter=0.7px
+  yolo_0519 vs yolo_0626: IoU=0.877
+  yolo_0519 vs yolo_1001: IoU=0.824
+  yolo_0626 vs yolo_1001: IoU=0.801
+Report saved: /mnt/data2/yolo_eval/output/report.html
